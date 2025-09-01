@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Task Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .stats-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2575fc;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .tasks-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            grid-column: 1 / -1;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2575fc;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 14px 25px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .search-box button {
+            width: auto;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .filter-select {
+            flex: 1;
+        }
+
+        .task-list {
+            list-style-type: none;
+        }
+
+        .task-item {
+            background-color: #f8f9fa;
+            border-left: 5px solid #2575fc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #212529;
+        }
+
+        .task-details {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .task-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6c757d;
+        }
+
+        .task-description {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .task-progress {
+            width: 100%;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 4px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .complete-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .priority-high {
+            border-left-color: #dc3545;
+        }
+
+        .priority-medium {
+            border-left-color: #ffc107;
+        }
+
+        .priority-low {
+            border-left-color: #28a745;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .category-work {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .category-study {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .category-personal {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TaskFlow</h1>
+        <p class="tagline">Streamline your tasks and boost productivity</p>
+    </header>
+
+    <div class="container">
+        <section class="form-section">
+            <h2>Add New Task</h2>
+            <div class="form-group">
+                <label for="task-title">Task Title</label>
+                <input type="text" id="task-title" placeholder="Enter task title">
+            </div>
+            
+            <div class="form-group">
+                <label for="task-category">Category</label>
+                <select id="task-category">
+                    <option value="">Select category</option>
+                    <option value="work">Work</option>
+                    <option value="study">Study</option>
+                    <option value="personal">Personal</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="task-priority">Priority</label>
+                <select id="task-priority">
+                    <option value="">Select priority</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="task-deadline">Deadline</label>
+                <input type="datetime-local" id="task-deadline">
+            </div>
+            
+            <div class="form-group">
+                <label for="task-description">Description</label>
+                <textarea id="task-description" placeholder="Enter task description"></textarea>
+            </div>
+            
+            <button id="add-task-btn">Add Task</button>
+        </section>
+
+        <section class="stats-section">
+            <div class="stat-box">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </section>
+
+        <section class="tasks-section">
+            <h2>Task List</h2>
+            
+            <div class="search-box">
+                <input type="text" placeholder="Search tasks...">
+                <button><i class="fas fa-search"></i> Search</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-select">
+                    <label>Category</label>
+                    <select>
+                        <option>All Categories</option>
+                        <option>Work</option>
+                        <option>Study</option>
+                        <option>Personal</option>
+                    </select>
+                </div>
+                
+                <div class="filter-select">
+                    <label>Status</label>
+                    <select>
+                        <option>All Status</option>
+                        <option>Completed</option>
+                        <option>Pending</option>
+                        <option>Urgent</option>
+                    </select>
+                </div>
+            </div>
+            
+            <ul class="task-list">
+                <li class="task-item priority-high">
+                    <div class="task-info">
+                        <h3 class="task-title">Complete Project Proposal</h3>
+                        <div class="task-details">
+                            <span class="task-detail"><i class="fas fa-briefcase"></i> <span class="category-badge category-work">Work</span></span>
+                            <span class="task-detail"><i class="fas fa-exclamation-circle"></i> High Priority</span>
+                            <span class="task-detail"><i class="fas fa-calendar"></i> 15/09/2023, 3:00 PM</span>
+                        </div>
+                        <p class="task-description">Prepare the project proposal document for client meeting</p>
+                        <div class="task-progress">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
+                        <div>30% Complete</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn"><i class="fas fa-check"></i> Complete</button>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </li>
+                
+                <li class="task-item priority-medium">
+                    <div class="task-info">
+                        <h3 class="task-title">Research for History Paper</h3>
+                        <div class="task-details">
+                            <span class="task-detail"><i class="fas fa-book"></i> <span class="category-badge category-study">Study</span></span>
+                            <span class="task-detail"><i class="fas fa-exclamation-circle"></i> Medium Priority</span>
+                            <span class="task-detail"><i class="fas fa-calendar"></i> 20/09/2023, 5:00 PM</span>
+                        </div>
+                        <p class="task-description">Gather sources and references for the upcoming history paper on World War II</p>
+                        <div class="task-progress">
+                            <div class="progress-bar" style="width: 70%"></div>
+                        </div>
+                        <div>70% Complete</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn"><i class="fas fa-check"></i> Complete</button>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </li>
+                
+                <li class="task-item priority-low">
+                    <div class="task-info">
+                        <h3 class="task-title">Gym Session</h3>
+                        <div class="task-details">
+                            <span class="task-detail"><i class="fas fa-heart"></i> <span class="category-badge category-personal">Personal</span></span>
+                            <span class="task-detail"><i class="fas fa-exclamation-circle"></i> Low Priority</span>
+                            <span class="task-detail"><i class="fas fa-calendar"></i> 12/09/2023, 7:00 AM</span>
+                        </div>
+                        <p class="task-description">Morning workout session at the gym - focus on cardio</p>
+                        <div class="task-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div>100% Complete</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn"><i class="fas fa-check"></i> Complete</button>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const taskTitle = document.getElementById('task-title');
+            const taskCategory = document.getElementById('task-category');
+            const taskPriority = document.getElementById('task-priority');
+            const taskDeadline = document.getElementById('task-deadline');
+            const taskDescription = document.getElementById('task-description');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const taskList = document.querySelector('.task-list');
+            const totalTasks = document.querySelectorAll('.stat-number')[0];
+            const completedTasks = document.querySelectorAll('.stat-number')[1];
+            const pendingTasks = document.querySelectorAll('.stat-number')[2];
+            
+            // Set default deadline to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            taskDeadline.value = tomorrow.toISOString().slice(0, 16);
+            
+            // Add task function
+            addTaskBtn.addEventListener('click', function() {
+                if (taskTitle.value.trim() === '') {
+                    alert('Please enter a task title');
+                    return;
+                }
+                
+                const category = taskCategory.value || 'work';
+                const priority = taskPriority.value || 'medium';
+                
+                // Create new task element
+                const taskItem = document.createElement('li');
+                taskItem.className = `task-item priority-${priority}`;
+                
+                taskItem.innerHTML = `
+                    <div class="task-info">
+                        <h3 class="task-title">${taskTitle.value}</h3>
+                        <div class="task-details">
+                            <span class="task-detail"><i class="fas fa-${getCategoryIcon(category)}"></i> <span class="category-badge category-${category}">${capitalizeFirst(category)}</span></span>
+                            <span class="task-detail"><i class="fas fa-exclamation-circle"></i> ${capitalizeFirst(priority)} Priority</span>
+                            <span class="task-detail"><i class="fas fa-calendar"></i> ${formatDateTime(taskDeadline.value)}</span>
+                        </div>
+                        <p class="task-description">${taskDescription.value || 'No description provided'}</p>
+                        <div class="task-progress">
+                            <div class="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div>0% Complete</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn"><i class="fas fa-check"></i> Complete</button>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                
+                // Add to task list
+                taskList.prepend(taskItem);
+                
+                // Add event listeners to new task
+                const completeBtn = taskItem.querySelector('.complete-btn');
+                const editBtn = taskItem.querySelector('.edit-btn');
+                const deleteBtn = taskItem.querySelector('.delete-btn');
+                
+                completeBtn.addEventListener('click', function() {
+                    const progressBar = taskItem.querySelector('.progress-bar');
+                    const progressText = taskItem.querySelector('.task-info div:last-child');
+                    
+                    if (progressBar.style.width === '100%') {
+                        progressBar.style.width = '0%';
+                        progressText.textContent = '0% Complete';
+                        completeBtn.innerHTML = '<i class="fas fa-check"></i> Complete';
+                    } else {
+                        progressBar.style.width = '100%';
+                        progressText.textContent = '100% Complete';
+                        completeBtn.innerHTML = '<i class="fas fa-redo"></i> Redo';
+                    }
+                    
+                    updateStats();
+                });
+                
+                editBtn.addEventListener('click', function() {
+                    const newTitle = prompt('Edit task title:', taskItem.querySelector('.task-title').textContent);
+                    if (newTitle !== null) {
+                        taskItem.querySelector('.task-title').textContent = newTitle;
+                    }
+                });
+                
+                deleteBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete this task?')) {
+                        taskItem.remove();
+                        updateStats();
+                    }
+                });
+                
+                // Clear form
+                taskTitle.value = '';
+                taskCategory.value = '';
+                taskPriority.value = '';
+                taskDescription.value = '';
+                
+                // Set default deadline to tomorrow again
+                const newTomorrow = new Date();
+                newTomorrow.setDate(newTomorrow.getDate() + 1);
+                taskDeadline.value = newTomorrow.toISOString().slice(0, 16);
+                
+                // Update stats
+                updateStats();
+            });
+            
+            // Add event listeners to existing tasks
+            document.querySelectorAll('.task-item').forEach(item => {
+                const completeBtn = item.querySelector('.complete-btn');
+                const editBtn = item.querySelector('.edit-btn');
+                const deleteBtn = item.querySelector('.delete-btn');
+                
+                completeBtn.addEventListener('click', function() {
+                    const progressBar = item.querySelector('.progress-bar');
+                    const progressText = item.querySelector('.task-info div:last-child');
+                    
+                    if (progressBar.style.width === '100%') {
+                        progressBar.style.width = '0%';
+                        progressText.textContent = '0% Complete';
+                        completeBtn.innerHTML = '<i class="fas fa-check"></i> Complete';
+                    } else {
+                        progressBar.style.width = '100%';
+                        progressText.textContent = '100% Complete';
+                        completeBtn.innerHTML = '<i class="fas fa-redo"></i> Redo';
+                    }
+                    
+                    updateStats();
+                });
+                
+                editBtn.addEventListener('click', function() {
+                    const newTitle = prompt('Edit task title:', item.querySelector('.task-title').textContent);
+                    if (newTitle !== null) {
+                        item.querySelector('.task-title').textContent = newTitle;
+                    }
+                });
+                
+                deleteBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete this task?')) {
+                        item.remove();
+                        updateStats();
+                    }
+                });
+            });
+            
+            // Helper functions
+            function getCategoryIcon(category) {
+                const icons = {
+                    'work': 'briefcase',
+                    'study': 'book',
+                    'personal': 'heart'
+                };
+                return icons[category] || 'tasks';
+            }
+            
+            function capitalizeFirst(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+            
+            function formatDateTime(dateTimeString) {
+                const date = new Date(dateTimeString);
+                return date.toLocaleString();
+            }
+            
+            function updateStats() {
+                const tasks = document.querySelectorAll('.task-item');
+                const completed = document.querySelectorAll('.progress-bar[style="width: 100%"]');
+                
+                totalTasks.textContent = tasks.length;
+                completedTasks.textContent = completed.length;
+                pendingTasks.textContent = tasks.length - completed.length;
+            }
+            
+            // Initialize stats
+            updateStats();
+        });
+    </script>
+</body>
+</html>
